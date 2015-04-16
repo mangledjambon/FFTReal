@@ -1,28 +1,38 @@
 #include <iostream>
 #include "./fft/FFTReal.h"
 #define SIZE 8
-#define SCALE 0.1
 
 /*
  *  main.cpp
  *  Sean Breen R00070693 16/04/2015
- *  Nimbus
+ *  Nimbus Researcher
  *
  *  This program is to compute the fast fourier transform on
  *  an array of real numbers, then compute the inverse transform
  *  on the transformed array.
  *
- *  The original array should be identical to the array after performing
- *  the inverse transform.
+ *  The new array should be identical to the original array after
+ *  performing the inverse transform.
+ *
+ *  It makes use of Laurent de Soras' FFTReal program.
+ *
+ *  FFTReal is distributed under the terms of the Do
+ *  What The Fuck You Want To Public License.
+ *
  */
 
 using std::cout;
 using std::endl;
 using namespace ffft;
 
-void computeFFT(float destinationArray[]);
-void computeIFFT(float destinationArray[]);
+/*
+ * TODO: go to lunch
+ *
+ * */
+
+void computeFFT(float destinationArray[], float sourceArray[]);
 void displayResults(float results[]);
+ffft::FFTReal<float> fftReal ((long)8);     //create FFTReal object
 
 int main() {
 
@@ -34,14 +44,13 @@ int main() {
     ffft::FFTReal<float> fftReal ((long)8);     //create FFTReal object
 
     float fft_ans[SIZE];                        //array to hold values post-fft
-    fftReal.do_fft(fft_ans, x);                 //compute fft, put new values in our array
-    //fftReal.rescale(fft_ans);                   //rescale data (not needed after fft)
+    computeFFT(fft_ans, x);                    //compute fft, put new values in our array
 
-    cout << "After fft: " << endl;              //display results in frequency domain
+    cout << "After fft: " << endl;              //display results (frequency domain)
     displayResults(fft_ans);
 
-    float ifft_ans[SIZE];                       //cretae array to hold values after inverse fft
-    fftReal.do_ifft(fft_ans, ifft_ans);         //compute inverse fft
+    float ifft_ans[SIZE];                       //create array to hold values after inverse fft
+    fftReal.do_ifft(fft_ans, ifft_ans);        //compute inverse fft
     fftReal.rescale(ifft_ans);
 
     /*
@@ -56,11 +65,17 @@ int main() {
     return 0;
 }
 
+void computeFFT(float destinationArray[], float sourceArray[]){
+
+    fftReal.do_fft(destinationArray, sourceArray);
+
+}
+
 void displayResults(float results[]){           //display values from float array
 
     for(int i =0; i < SIZE; i++){
         cout << results[i] << " ";
     }
-    cout << endl;
+    cout << endl << endl;
 
 }
